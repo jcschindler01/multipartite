@@ -363,7 +363,7 @@ def test4():
 	Svn = SVN(rho)
 	red = REDUCE(rho,n)
 	SvnRed = [SVN(rr) for rr in red]
-	Sent, projmin = SENT(rho,n, maxiter=maxiter, initial_temp=initial_temp, eps=eps)
+	Sent, projmin = SENT(rho,n, maxiter=maxiter, initial_temp=initial_temp, eps=eps, projout=True)
 	## subsys labels
 	sub = 'ABCD'
 	## print
