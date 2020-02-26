@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize
 import scipy.linalg
-import qubits.qubits as qb
+#import qubits.qubits as qb
 plt.style.use("classic")
 
 
@@ -204,7 +204,7 @@ def SOBS(rho, P, decimals=9):
 	return 1.*S
 
 ## entanglement entropy
-def SENT(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05):
+def SENT(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05, projout=False):
 	n = np.array(n, dtype=int)
 	if len(rho)==np.prod(n):
 		## set bounds for minimization input parameter x
@@ -221,7 +221,10 @@ def SENT(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05):
 		## entanglement entropy
 		Sent = Smin - Svn
 	## return
-	return 1.*Sent, 1.*projmin
+	if projout==True:
+		return 1.*Sent, 1.*projmin
+	if projout==False:
+		return 1.*Sent
 
 
 
