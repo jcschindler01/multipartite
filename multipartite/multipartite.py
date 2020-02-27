@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize
 import scipy.linalg
+from scipy.stats import unitary_group as UG
 #import qubits.qubits as qb
 plt.style.use("classic")
 
@@ -153,6 +154,13 @@ def PROJ(U):
 def PROJPROD(PA,PB):
 	return 1.*np.array([kprod(pa,pb) for pa in PA for pb in PB], dtype=complex)
 
+## combine a list of sets of projectors by tensor product
+def PROJMP(PX):
+	proj = PX[0]
+	for j in range(1,len(PX)):
+		proj = PROJPROD(proj,PX[j])
+	return 1.*proj
+
 ## product projectors parameterized by real vector x
 ## n=(nA,nB,...) dictates how dimensions split into product
 def PROJN(x=np.zeros(6),n=[2,2]):
@@ -268,6 +276,16 @@ def SENT_BP(rho, n, Nmax=10, tol=1e-9, maxiter=100, initial_temp=1e3, eps=.05, p
 		return 1.*SentMin, ProjMin
 	if projout==False:
 		return 1.*SentMin
+
+
+## calculate SOBS in projectors defined by reduced density matrix eigenbasis
+## uniquely defined only when reduced density matrices have a full spectrum of distinct eigenvalues
+def SOBS_RHOX(rho, n, decimals=9):
+	red = REDUCE(rho, n)
+	vecs = [eig(rr)[1] for rr in red]
+	projx = [PROJ(v) for v in vecs]
+	proj = PROJMP(projx)
+	return 1.*SOBS(rho, proj, decimals=decimals)
 
 
 
@@ -525,7 +543,7 @@ def test6():
 
 
 ## run tests
-if True:
+if False:
 	if __name__=="__main__":
 		print("\nTESTS\n")
 		test6()
