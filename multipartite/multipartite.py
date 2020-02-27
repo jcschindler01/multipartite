@@ -226,8 +226,48 @@ def SENT(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05, projout
 	if projout==False:
 		return 1.*Sent
 
-
-
+## continue minimizing toward Sent = S(rhoA) in bipartite system
+def SENT_BP(rho, n, Nmax=10, tol=1e-9, maxiter=100, initial_temp=1e3, eps=.05, projout=False):
+	## init
+	N = 0
+	SvnA = SVN(REDUCE(rho,n)[0])
+	SentMin = np.inf
+	ProjMin = []
+	DiffMin = np.inf
+	## loop
+	while (N<Nmax and np.abs(DiffMin)>tol):
+		## print
+		print("\nN=%d"%N)
+		## calculate Sent
+		Sent, projmin = SENT(rho,n,maxiter,initial_temp,eps,projout=True)
+		diff = Sent-SvnA
+		print("current")
+		print("maxiter, initial_temp = %d, %.1e"%(maxiter,initial_temp))
+		print("Sent = %.6f"%Sent)
+		print("SvnA = %.6f"%SvnA)
+		print("diff = %.6f"%diff)
+		print("tol  = %.6f"%tol)
+		## check if best and update
+		if np.abs(diff)<np.abs(DiffMin):
+			print("is new BEST")
+			SentMin = 1.*Sent
+			ProjMin = projmin
+			DiffMin = diff
+		## perturb minimization parameters
+		maxiter = maxiter + 100
+		initial_temp = (0.5+np.random.rand())*initial_temp
+		## increment counter
+		N += 1
+	## reason for break
+	if np.abs(DiffMin) < tol:
+		print("\nTolerance Reached: Success!")
+	if N==Nmax:
+		print("\nMax Iterations Reached")
+	## return
+	if projout==True:
+		return 1.*SentMin, ProjMin
+	if projout==False:
+		return 1.*SentMin
 
 
 
@@ -389,13 +429,62 @@ def test4():
 	print()
 
 
+## compute entanglement entropy using SENT_BP in a pure BIPARTITE system
+def test5():
+	## input
+	n = [2,3]
+	psi = np.array([1.,0.,0.,1.])
+	maxiter = 100
+	initial_temp = 1e3
+	eps = .05
+	Nmax = 10
+	tol = 4e-3
+	# ## psi if copy pasting from output
+	## set psi randomly if not given properly
+	N = np.prod(n)
+	rand = False
+	if len(psi) != N:
+		psi = np.random.random(N) + 1j*np.random.random(N)
+		rand = True
+	## go
+	rho = RHO_PSI(psi)
+	Svn = SVN(rho)
+	red = REDUCE(rho,n)
+	SvnRed = [SVN(rr) for rr in red]
+	Sent, projmin = SENT_BP(rho,n, Nmax=Nmax, tol=tol, maxiter=maxiter, initial_temp=initial_temp, eps=eps, projout=True)
+	## subsys labels
+	sub = 'ABCD'
+	## print
+	print("\nTEST 5")
+	print("\npsi")
+	print(repr(psi))
+	for m in range(len(n)):
+		print("\nREDUCED SYSTEM m=%d"%m)
+		print("rho_red")
+		print(repr(np.round(red[m],3)))
+	print("\nprojmin")
+	print(repr(np.round(projmin,2)))
+	print("\nrho")
+	print(repr(np.round(rho,3)))
+	print()
+	if rand==True:
+		print("psi = random")
+	print( "N = %s"%(len(rho)))
+	print( "n = %s"%(n))
+	print( "Svn  = %.3f"%(Svn))
+	[print("Svn%s = %.3f"%(sub[i],SvnRed[i])) for i in range(len(n))]
+	print( "Sent = %.3f"%(Sent))
+	print()
+
+
+
 
 
 ## run tests
 if True:
 	if __name__=="__main__":
 		print("\nTESTS\n")
-		test4()
+		test5()
 
 
 
