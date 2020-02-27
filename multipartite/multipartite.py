@@ -477,6 +477,50 @@ def test5():
 	print()
 
 
+## compute entanglement entropy in tripartite system
+def test6():
+	## input
+	n = [2,2,2]
+	psi = np.array([1.,0.,0.,1.,0.,0.,0.,1.,np.nan])
+	maxiter = 100
+	initial_temp = 1e3
+	eps = .05
+	# ## psi if copy pasting from output
+	## set psi randomly if not given properly
+	N = np.prod(n)
+	rand = False
+	if len(psi) != N:
+		psi = np.random.random(N) + 1j*np.random.random(N)
+		rand = True
+	## go
+	rho = RHO_PSI(psi)
+	Svn = SVN(rho)
+	red = REDUCE(rho,n)
+	SvnRed = [SVN(rr) for rr in red]
+	Sent, projmin = SENT(rho,n, maxiter=maxiter, initial_temp=initial_temp, eps=eps, projout=True)
+	## subsys labels
+	sub = 'ABCD'
+	## print
+	print("\nTEST 6")
+	print("\npsi")
+	print(repr(psi))
+	for m in range(len(n)):
+		print("\nREDUCED SYSTEM m=%d"%m)
+		print("rho_red")
+		print(repr(np.round(red[m],3)))
+	print("\nprojmin")
+	print(repr(np.round(projmin,2)))
+	print("\nrho")
+	print(repr(np.round(rho,3)))
+	print()
+	if rand==True:
+		print("psi = random")
+	print( "N = %s"%(len(rho)))
+	print( "n = %s"%(n))
+	print( "Svn  = %.3f"%(Svn))
+	[print("Svn%s = %.3f"%(sub[i],SvnRed[i])) for i in range(len(n))]
+	print( "Sent = %.3f"%(Sent))
+	print()
 
 
 
@@ -484,7 +528,7 @@ def test5():
 if True:
 	if __name__=="__main__":
 		print("\nTESTS\n")
-		test5()
+		test6()
 
 
 
