@@ -285,6 +285,7 @@ def SENT_BP(rho, n, Nmax=10, tol=1e-9, maxiter=100, initial_temp=1e3, eps=.05, p
 ## calculate SOBS in projectors defined by reduced density matrix eigenbasis
 ## uniquely defined only when reduced density matrices have a full spectrum of distinct eigenvalues
 ## when uniquely defined, should be equal to Sent=S(rhoA)=S(rhoB) in bipartite pure state
+## note that this breaks (check test7) if the eigenvector matrix is daggered or transposed
 def SOBS_RHOX(rho, n, decimals=9):
 	red = REDUCE(rho, n)
 	vecs = [eig(rr)[1] for rr in red]
@@ -594,13 +595,61 @@ def test7():
 	print()
 
 
+## compute S_{rhoA x rhoB x rhoC} in a 2x2x2 system
+def test8():
+	## input
+	n = [2,2,2]
+	psi = np.array([1.,1.,0.,0.,0.,0.,0.,1.])
+	maxiter = 100
+	initial_temp = 1e3
+	eps = .05
+	# ## psi if copy pasting from output
+	## set psi randomly if not given properly
+	N = np.prod(n)
+	rand = False
+	if len(psi) != N:
+		psi = PSI_RAND(n)
+		rand = True
+	## go
+	rho = RHO_PSI(psi)
+	Svn = SVN(rho)
+	red = REDUCE(rho,n)
+	SvnRed = [SVN(rr) for rr in red]
+	ValsRed = [eig(rr)[0] for rr in red]
+	Sent, projmin = SENT(rho,n, maxiter=maxiter, initial_temp=initial_temp, eps=eps, projout=True)
+	Srhox = SOBS_RHOX(rho,n)
+	## subsys labels
+	sub = 'ABCD'
+	## print
+	print("\nTEST 8")
+	print("\npsi")
+	print(repr(psi))
+	for m in range(len(n)):
+		print("\nREDUCED SYSTEM m=%d"%m)
+		print("rho_red")
+		print(repr(np.round(red[m],3)))
+		print(repr(np.round(ValsRed[m],3)))
+	print("\nprojmin")
+	print(repr(np.round(projmin,2)))
+	print("\nrho")
+	print(repr(np.round(rho,3)))
+	print()
+	if rand==True:
+		print("psi = random")
+	print( "N = %s"%(len(rho)))
+	print( "n = %s"%(n))
+	print( "Svn   = %.3f"%(Svn))
+	[print("Svn%s  = %.3f"%(sub[i],SvnRed[i])) for i in range(len(n))]
+	print( "Sent  = %.3f"%(Sent))
+	print( "Srhox = %.3f"%(Srhox))
+	print()
 
 
 ## run tests
 if True:
 	if __name__=="__main__":
 		print("\nTESTS\n")
-		test7()
+		test8()
 
 
 
