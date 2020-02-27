@@ -546,7 +546,7 @@ def test6():
 	print()
 
 
-## check S_{rhoA x rhoB x ...} = S(rhoA) = S(rhoB) in a bipartite system
+## check S_{rhoA x rhoB} = S(rhoA) = S(rhoB) in a bipartite system
 def test7():
 	## input
 	n = [2,2]
@@ -567,10 +567,11 @@ def test7():
 	red = REDUCE(rho,n)
 	SvnRed = [SVN(rr) for rr in red]
 	Sent, projmin = SENT(rho,n, maxiter=maxiter, initial_temp=initial_temp, eps=eps, projout=True)
+	Srhox = SOBS_RHOX(rho,n)
 	## subsys labels
 	sub = 'ABCD'
 	## print
-	print("\nTEST 6")
+	print("\nTEST 7")
 	print("\npsi")
 	print(repr(psi))
 	for m in range(len(n)):
@@ -586,16 +587,17 @@ def test7():
 		print("psi = random")
 	print( "N = %s"%(len(rho)))
 	print( "n = %s"%(n))
-	print( "Svn  = %.3f"%(Svn))
-	[print("Svn%s = %.3f"%(sub[i],SvnRed[i])) for i in range(len(n))]
-	print( "Sent = %.3f"%(Sent))
+	print( "Svn   = %.3f"%(Svn))
+	[print("Svn%s  = %.3f"%(sub[i],SvnRed[i])) for i in range(len(n))]
+	print( "Sent  = %.3f"%(Sent))
+	print( "Srhox = %.3f"%(Srhox))
 	print()
 
 
 
 
 ## run tests
-if False:
+if True:
 	if __name__=="__main__":
 		print("\nTESTS\n")
 		test7()
