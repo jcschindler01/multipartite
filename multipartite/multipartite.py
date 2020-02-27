@@ -645,11 +645,16 @@ def test8():
 	print()
 
 
+## check that tensor product of projectors is working properly
+def test9():
+	psi = 0.
+
+
 ## run tests
 if True:
 	if __name__=="__main__":
 		print("\nTESTS\n")
-		test8()
+		test9()
 
 
 
