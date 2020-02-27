@@ -183,6 +183,10 @@ def RHO_PSI(psi):
 	psi = psi.astype(complex) / np.sqrt(np.sum(np.abs(psi)**2))
 	return 1.*couter(psi)
 
+## Haar random pure state
+def PSI_RAND(n):
+	return 1.*UG.rvs(np.prod(n))[:,0]
+
 
 ###############
 ### Calculate Entropies
@@ -280,6 +284,7 @@ def SENT_BP(rho, n, Nmax=10, tol=1e-9, maxiter=100, initial_temp=1e3, eps=.05, p
 
 ## calculate SOBS in projectors defined by reduced density matrix eigenbasis
 ## uniquely defined only when reduced density matrices have a full spectrum of distinct eigenvalues
+## when uniquely defined, should be equal to Sent=S(rhoA)=S(rhoB) in bipartite pure state
 def SOBS_RHOX(rho, n, decimals=9):
 	red = REDUCE(rho, n)
 	vecs = [eig(rr)[1] for rr in red]
@@ -541,12 +546,59 @@ def test6():
 	print()
 
 
+## check S_{rhoA x rhoB x ...} = S(rhoA) = S(rhoB) in a bipartite system
+def test7():
+	## input
+	n = [2,2]
+	psi = np.array([])
+	maxiter = 100
+	initial_temp = 1e3
+	eps = .05
+	# ## psi if copy pasting from output
+	## set psi randomly if not given properly
+	N = np.prod(n)
+	rand = False
+	if len(psi) != N:
+		psi = PSI_RAND(n)
+		rand = True
+	## go
+	rho = RHO_PSI(psi)
+	Svn = SVN(rho)
+	red = REDUCE(rho,n)
+	SvnRed = [SVN(rr) for rr in red]
+	Sent, projmin = SENT(rho,n, maxiter=maxiter, initial_temp=initial_temp, eps=eps, projout=True)
+	## subsys labels
+	sub = 'ABCD'
+	## print
+	print("\nTEST 6")
+	print("\npsi")
+	print(repr(psi))
+	for m in range(len(n)):
+		print("\nREDUCED SYSTEM m=%d"%m)
+		print("rho_red")
+		print(repr(np.round(red[m],3)))
+	print("\nprojmin")
+	print(repr(np.round(projmin,2)))
+	print("\nrho")
+	print(repr(np.round(rho,3)))
+	print()
+	if rand==True:
+		print("psi = random")
+	print( "N = %s"%(len(rho)))
+	print( "n = %s"%(n))
+	print( "Svn  = %.3f"%(Svn))
+	[print("Svn%s = %.3f"%(sub[i],SvnRed[i])) for i in range(len(n))]
+	print( "Sent = %.3f"%(Sent))
+	print()
+
+
+
 
 ## run tests
 if False:
 	if __name__=="__main__":
 		print("\nTESTS\n")
-		test6()
+		test7()
 
 
 
