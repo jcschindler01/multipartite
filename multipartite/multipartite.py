@@ -54,7 +54,7 @@ def ndict(n):
 ## generate list of basis index labels for system of type n=(nA,nB,...), possibly holding some index values fixed
 ## sums over all index values which are 'x' in the hold argument
 ## "mind" = "multipartite indices"
-def mind(n=[2,2], hold='xx'):
+def mind(n=[2,2], hold='xxxxx'):
 	ss = [''.join([str(i) for i in range(nn)]) for nn in n]
 	for i in range(len(n)):
 		if not hold[i] == 'x':
@@ -65,7 +65,7 @@ def mind(n=[2,2], hold='xx'):
 	return tuple(ijk)
 
 ## "rind" = "rho indices"
-def rind(n=[2,2], hold='xx'):
+def rind(n=[2,2], hold='xxxxx'):
 	dd = ndict(n)
 	return np.array([dd[idx] for idx in mind(n,hold)], dtype=int)
 
@@ -647,8 +647,55 @@ def test8():
 
 ## check that tensor product of projectors is working properly
 def test9():
-	psi = 0.
-
+	## import
+	import qubits.qubits as qb
+	## set subsys projectors
+	UA = UG.rvs(2)   #np.array([[1.,0.],[0.,1.]], dtype=complex)
+	UB = UG.rvs(2)   #np.array([[1.,0.],[0.,1.]], dtype=complex)
+	UC = UG.rvs(2)   #np.array([[1.,0.],[0.,1.]], dtype=complex)
+	U = [UA,UB,UC]
+	n = [len(UU) for UU in U]
+	N = np.prod(n)
+	p = [PROJ(UU) for UU in U]
+	subs = 'ABCD'
+	## print
+	print("TEST 9")
+	for i in range(len(p)):
+		print("\nSUBSYS %s"%(subs[i]))
+		print("proj")
+		print(p[i])
+		print("isvalid = %s"%(qb.isvalid_proj(p[i])))
+	pprod = PROJMP(p)
+	print("\ntensor product projectors")
+	print(pprod)
+	print("isvalid = %s"%(qb.isvalid_proj(pprod)))
+	## if want to compare to alternate method
+	if False:
+		## construct product projectors an alternate way
+		pprod2 = []
+		for i in range(len(p[0])):
+			for j in range(len(p[1])):
+				for k in range(len(p[2])):
+					pp = np.zeros((N,N), dtype=complex)
+					mm, rr = mind(n), rind(n)
+					for ii in range(len(pp)):
+						for jj in range(len(pp)):
+							mmii = [int(s) for s in mm[ii]]
+							mmjj = [int(s) for s in mm[jj]]
+							pp[rr[ii],rr[jj]] = p[0][i][mmii[0],mmjj[0]]*p[1][j][mmii[1],mmjj[1]]*p[2][k][mmii[2],mmjj[2]]
+					pprod2 += [1.*pp]
+		pprod2 = 1.*np.array(pprod2, dtype=complex)
+		print("\ntensor product projectors 2")
+		print(pprod2)
+		print("isvalid = %s"%(qb.isvalid_proj(pprod2)))
+		## check if both methods are equal
+		print("\nboth methods agree if true")
+		tol = 1e-9
+		for m in range(len(pprod)):
+			print(np.all(np.abs(pprod[m]-pprod2[m]) < tol))
+		print()
+						
+						
 
 ## run tests
 if True:
