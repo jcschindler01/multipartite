@@ -220,7 +220,7 @@ def SOBS(rho, P, decimals=9):
 	return 1.*S
 
 ## entanglement entropy
-def SENT(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05, projout=False):
+def SENT(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05, projout=False, pfactors=False):
 	n = np.array(n, dtype=int)
 	if len(rho)==np.prod(n):
 		## set bounds for minimization input parameter x
@@ -231,16 +231,18 @@ def SENT(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05, projout
 		## minimize
 		optout = scipy.optimize.dual_annealing(func, bounds, maxiter=maxiter, initial_temp=initial_temp)
 		xmin, Smin = optout.x, optout.fun
-		projmin = PROJN(xmin,n)
+		projmin, projfactors = PROJN(xmin,n, factors_out=True)
 		## von Neumann entropy
 		Svn = SVN(rho)
 		## entanglement entropy
 		Sent = Smin - Svn
 	## return
+	out = 1.*Sent
 	if projout==True:
-		return 1.*Sent, 1.*projmin
-	if projout==False:
-		return 1.*Sent
+		out = 1.*Sent, 1.*projmin
+	if pfactors==True:
+		out = 1.*Sent, 1.*projmin, tuple([1.*pp for pp in projfactors])
+	return out
 
 ## continue minimizing toward Sent = S(rhoA) in bipartite system
 def SENT_BP(rho, n, Nmax=10, tol=1e-9, maxiter=100, initial_temp=1e3, eps=.05, projout=False):
@@ -601,10 +603,15 @@ def test7():
 
 ## compute S_{rhoA x rhoB x rhoC} in a 2x2x2 system
 def test8():
+	## print options
+	if False:
+		import sys
+		sys.stdout = open('log.txt','w')
+	np.set_printoptions(linewidth=200)
 	## input
 	n = [2,2,2]
 	psi = np.array([1.,1.,0.,0.,0.,0.,0.,1.])
-	maxiter = 100
+	maxiter = 200
 	initial_temp = 1e3
 	eps = .05
 	# ## psi if copy pasting from output
@@ -620,7 +627,7 @@ def test8():
 	red = REDUCE(rho,n)
 	SvnRed = [SVN(rr) for rr in red]
 	ValsRed = [eig(rr)[0] for rr in red]
-	Sent, projmin = SENT(rho,n, maxiter=maxiter, initial_temp=initial_temp, eps=eps, projout=True)
+	Sent, projmin, projfactors = SENT(rho,n, maxiter=maxiter, initial_temp=initial_temp, eps=eps, projout=True, pfactors=True)
 	Srhox = SOBS_RHOX(rho,n)
 	## subsys labels
 	sub = 'ABCD'
@@ -630,9 +637,12 @@ def test8():
 	print(repr(psi))
 	for m in range(len(n)):
 		print("\nREDUCED SYSTEM m=%d"%m)
-		print("rho_red")
+		print("\nrho_red")
 		print(repr(np.round(red[m],3)))
+		print("\nrho_red eigenvals")
 		print(repr(np.round(ValsRed[m],3)))
+		print("\nlocal factor of projmin")
+		print(repr(np.round(projfactors[m],3)))
 	print("\nprojmin")
 	print(repr(np.round(projmin,2)))
 	print("\nrho")
@@ -707,10 +717,10 @@ def test9():
 						
 
 ## run tests
-if False:
+if True:
 	if __name__=="__main__":
 		print("\nTESTS\n")
-		test9()
+		test8()
 
 
 
