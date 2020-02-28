@@ -163,7 +163,7 @@ def PROJMP(PX):
 
 ## product projectors parameterized by real vector x
 ## n=(nA,nB,...) dictates how dimensions split into product
-def PROJN(x=np.zeros(6),n=[2,2]):
+def PROJN(x=np.zeros(6), n=[2,2], factors_out=False):
 	n = np.array(n, dtype=int)
 	if len(x)==np.sum(n**2-1):
 		xi = np.split(x, np.cumsum(n**2 - 1)[:-1])
@@ -171,7 +171,11 @@ def PROJN(x=np.zeros(6),n=[2,2]):
 	proj = Pi[0]
 	for j in range(1,len(Pi)):
 		proj = PROJPROD(proj,Pi[j])
-	return 1.*proj
+	## return
+	if factors_out==True:
+		return 1.*proj, [1.*pp for pp in Pi]
+	if factors_out==False:
+		return 1.*proj
 
 
 ###############
@@ -703,7 +707,7 @@ def test9():
 						
 
 ## run tests
-if True:
+if False:
 	if __name__=="__main__":
 		print("\nTESTS\n")
 		test9()
