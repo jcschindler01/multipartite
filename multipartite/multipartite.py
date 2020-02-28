@@ -622,7 +622,8 @@ def test8():
 		psi = PSI_RAND(n)
 		rand = True
 	## go
-	rho = RHO_PSI(psi)
+	psinormed = psi.astype(complex) / np.sqrt(np.sum(np.abs(psi)**2))
+	rho = RHO_PSI(psinormed)
 	Svn = SVN(rho)
 	red = REDUCE(rho,n)
 	SvnRed = [SVN(rr) for rr in red]
@@ -633,7 +634,7 @@ def test8():
 	sub = 'ABCD'
 	## print
 	print("\nTEST 8")
-	print("\npsi")
+	print("\npsi (before normalization)")
 	print(repr(psi))
 	for m in range(len(n)):
 		print("\nREDUCED SYSTEM m=%d"%m)
@@ -641,10 +642,12 @@ def test8():
 		print(repr(np.round(red[m],3)))
 		print("\nrho_red eigenvals")
 		print(repr(np.round(ValsRed[m],3)))
-		print("\nlocal factor of projmin")
+		print("\nlocal factors of projmin")
 		print(repr(np.round(projfactors[m],3)))
 	print("\nprojmin")
 	print(repr(np.round(projmin,2)))
+	print("\npsi")
+	print(repr(np.round(psinormed,3)))
 	print("\nrho")
 	print(repr(np.round(rho,3)))
 	print()
