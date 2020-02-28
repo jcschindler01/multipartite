@@ -650,9 +650,14 @@ def test9():
 	## import
 	import qubits.qubits as qb
 	## set subsys projectors
-	UA = UG.rvs(2)   #np.array([[1.,0.],[0.,1.]], dtype=complex)
-	UB = UG.rvs(2)   #np.array([[1.,0.],[0.,1.]], dtype=complex)
-	UC = UG.rvs(2)   #np.array([[1.,0.],[0.,1.]], dtype=complex)
+	UA = np.array([[1.,0.],[0.,1.]], dtype=complex)
+	UB = np.array([[1.,0.],[0.,1.]], dtype=complex)
+	UC = (1./np.sqrt(2))*np.array([[1.,1.],[1.,-1.]], dtype=complex)
+	## or random
+	# UA = UG.rvs(2)
+	# UB = UG.rvs(2)
+	# UC = UG.rvs(2)
+	##
 	U = [UA,UB,UC]
 	n = [len(UU) for UU in U]
 	N = np.prod(n)
