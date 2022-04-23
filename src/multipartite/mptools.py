@@ -218,8 +218,8 @@ def SOBS(rho, P, decimals=9):
     S = np.sum(-p[mask]*np.log2(p[mask]/V[mask]))
   return 1.*S
 
-## entanglement entropy
-def SENT(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05, projout=False, pfactors=False):
+## quantum correlation entropy
+def Sqc(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05, projout=False, pfactors=False):
   n = np.array(n, dtype=int)
   if len(rho)==np.prod(n):
     ## set bounds for minimization input parameter x
@@ -243,8 +243,8 @@ def SENT(rho=np.eye(4), n=[2,2], maxiter=100, initial_temp=1e3, eps=.05, projout
     out = 1.*Sent, 1.*projmin, tuple([1.*pp for pp in projfactors])
   return out
 
-## continue minimizing toward Sent = S(rhoA) in bipartite system
-def SENT_BP(rho, n, Nmax=10, tol=1e-9, maxiter=100, initial_temp=1e3, eps=.05, projout=False):
+## continue minimizing toward Sqc = S(rhoA) in bipartite system
+def Sqc_BP(rho, n, Nmax=10, tol=1e-9, maxiter=100, initial_temp=1e3, eps=.05, projout=False):
   ## init
   N = 0
   SvnA = SVN(REDUCE(rho,n)[0])
@@ -290,7 +290,7 @@ def SENT_BP(rho, n, Nmax=10, tol=1e-9, maxiter=100, initial_temp=1e3, eps=.05, p
 ## calculate SOBS in projectors defined by reduced density matrix eigenbasis
 ## uniquely defined only when reduced density matrices have a full spectrum of distinct eigenvalues
 ## when uniquely defined, should be equal to Sent=S(rhoA)=S(rhoB) in bipartite pure state
-## note that this breaks (check test7) if the eigenvector matrix is daggered or transposed
+## note that this breaks (check OldTest7) if the eigenvector matrix is daggered or transposed
 def SOBS_RHOX(rho, n, decimals=9):
   red = REDUCE(rho, n)
   vecs = [eig(rr)[1] for rr in red]
@@ -300,4 +300,7 @@ def SOBS_RHOX(rho, n, decimals=9):
 
 
 
+## deprecated terminology -- entanglement entropy
+SENT = Sqc
+SENT_BP = Sqc_BP
 
