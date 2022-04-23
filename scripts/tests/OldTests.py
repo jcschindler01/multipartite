@@ -372,7 +372,7 @@ def test8():
 ## check that tensor product of projectors is working properly
 def test9():
   ## import
-  import qubits.qubits as qb
+  #import qubits.qubits as qb
   ## set subsys projectors
   UA = np.array([[1.,0.],[0.,1.]], dtype=complex)
   UB = np.array([[1.,0.],[0.,1.]], dtype=complex)
@@ -430,5 +430,7 @@ def test9():
 if True:
   if __name__=="__main__":
     print("\nTESTS\n")
-    test4()
+    x = test9
+    print(help(x))
+    x()
 
