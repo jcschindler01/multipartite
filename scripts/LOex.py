@@ -111,7 +111,6 @@ print("-sqrt(5) * Bvecs =")
 [print(-np.sqrt(5.) * Bvecs[i]) for i in range(len(Bvecs))]
 print()
 
-print(mp.isvalid_rho(rho)[1])
 
 
 
