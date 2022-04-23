@@ -10,4 +10,5 @@ import matplotlib.pyplot as plt
 plt.style.use("classic")
 
 from multipartite import mptools
+from multipartite import blochvec
 from multipartite.mptools import *

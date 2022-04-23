@@ -131,3 +131,54 @@ def SIGMA(n=2):
   return 1.*np.array(ss, dtype=complex)
 
 
+## traceless hermitian matrix (x = sum_i c_i sigma_i) from real Bloch vector c with (|c|^2 = |x|^2).
+def X(c=np.zeros(3)):
+  return 1.*np.array(np.sum([c[i]*s[i] for i in range(len(s))], axis=0))
+
+## joint traceless hermitian matrix xAB from joint Bloch vector cAB
+def XAB(cAB=np.zeros((3,3))):
+  return 1.*np.sum([cAB[i,j]*kprod(s[i],s[j]) for i in range(3) for j in range(3)], axis=0)
+
+## density matrix from Bloch coeffs
+def RHO(cA=np.zeros(3), cB=np.zeros(3), cAB=np.zeros((3,3)), product=False):
+  #print("\nRHO")
+  #print("cA")
+  #print(repr(np.round(cA ,3)))
+  #print("cB")
+  #print(repr(np.round(cB ,3)))
+  #print("cAB")
+  if product==True:
+    cAB = 0.5*np.outer(cA,cB)
+  #print(repr(np.round(cAB,3)))
+  valid_c = isvalid_c(cA,cB,cAB)
+  a = ONE/d
+  b = np.sqrt((d-1.)/d)*ksum(alpha*X(cA),beta*X(cB))
+  c = XAB(cAB)
+  rho = a + b + c
+  #print("rho")
+  #print(repr(np.round(rho,3)))
+  rho, valid_rho = isvalid_rho(rho)
+  return 1.*rho
+
+
+
+## Bloch coeffs from rho
+def CAB_RHO(rho):
+  rhoA, rhoB = RHOA(rho), RHOB(rho)
+  xA = np.sqrt(dA/(dA-1.)) * (rhoA - one/dA)
+  xB = np.sqrt(dB/(dB-1.)) * (rhoB - one/dB)
+  cA = np.array([np.real(dot(s[i],xA)) for i in range(len(s))])
+  cB = np.array([np.real(dot(s[i],xB)) for i in range(len(s))])
+  xAB = (rho - ONE/d)
+  yAB = xAB - ksum(alpha*xA, beta*xB)
+  cAB = np.nan * np.ones((3,3))
+  for i in range(len(s)):
+    for j in range(len(s)):
+      cAB[i,j] = np.real(dot( kprod(s[i],s[j]), yAB))
+  return 1.*cA, 1.*cB, 1.*cAB
+
+
+## arbitrary 2d state vector
+def PSI(theta=0., phi=0.):
+  return np.array([np.cos(theta), np.exp(-1j*phi)*np.sin(theta)], dtype=complex)
+

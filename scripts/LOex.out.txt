@@ -70,3 +70,5 @@ with vecs (2,1), (-1,2). Check them.
 -sqrt(5) * Bvecs =
 [-1.+0.j  2.-0.j]
 [2.-0.j 1.-0.j]
+
+True
