@@ -111,13 +111,68 @@ print("-sqrt(5) * Bvecs =")
 [print(-np.sqrt(5.) * Bvecs[i]) for i in range(len(Bvecs))]
 print()
 
+print("Marginal Bloch Vectors")
+print()
+
+cA = mp.bloch_from_rho(rho=rhoA)
+cB = mp.bloch_from_rho(rho=rhoB)
+
+print("7 * cA = ")
+print(7 * cA)
+print()
+
+print("7 * cB = ")
+print(7 * cB)
+print()
+
+print("The von Neumann entropies are")
+print()
+
+Svn  = mp.SVN(rho )
+SvnA = mp.SVN(rhoA)
+SvnB = mp.SVN(rhoB)
+
+print("Svn  = %.3f"%(Svn))
+print("SvnA = %.3f"%(SvnA))
+print("SvnB = %.3f"%(SvnB))
+print()
+
+print("Just under 1 bit of entropy in the global and A states, while B is a little more pure.")
+print()
 
 
+print("The OE in Reduced Density Eigenbasis")
+print()
 
+S_RDE = mp.SOBS_RHOX(rho, [2,2])
 
+print("S_RDE = %.3f"%(S_RDE))
+print()
 
+print("Leaving an RDE gap")
+print()
 
+print("E_RDE = (%.3f - %.3f)"%(S_RDE,Svn))
+print("      = %.3f"%(S_RDE - Svn))
+print()
 
+## minimization
+Sqc, projmin, pfactors = mp.Sqc(rho=rho, n=[2,2], maxiter=100, initial_temp=1e4, eps=.05, projout=False, pfactors=True)
+
+print("Evaluate Sqc by numerical minimization.")
+print()
+
+print("The numerical minimal gap is equal to")
+print()
+
+print("Sqc = %.3f"%(Sqc))
+print()
+
+print("This occurs for projectors")
+print()
+
+print("pfactors =")
+[print(np.round(pfactors[i],1)) for i in range(len(pfactors))]
 
 
 

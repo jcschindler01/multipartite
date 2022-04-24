@@ -71,3 +71,47 @@ with vecs (2,1), (-1,2). Check them.
 [-1.+0.j  2.-0.j]
 [2.-0.j 1.-0.j]
 
+Marginal Bloch Vectors
+
+7 * cA = 
+[ 0.  0. -1.]
+
+7 * cB = 
+[4. 0. 3.]
+
+The von Neumann entropies are
+
+Svn  = 0.985
+SvnA = 0.985
+SvnB = 0.592
+
+Just under 1 bit of entropy in the global and A states, while B is a little more pure.
+
+The OE in Reduced Density Eigenbasis
+
+S_RDE = 1.563
+
+Leaving an RDE gap
+
+E_RDE = (1.563 - 0.985)
+      = 0.577
+
+Evaluate Sqc by numerical minimization.
+
+The numerical minimal gap is equal to
+
+Sqc = 0.429
+
+This occurs for projectors
+
+pfactors =
+[[[ 1.+0.j -0.+0.j]
+  [-0.-0.j  0.+0.j]]
+
+ [[ 0.+0.j  0.-0.j]
+  [ 0.+0.j  1.+0.j]]]
+[[[ 0.5+0.j  0.5+0.j]
+  [ 0.5-0.j  0.5+0.j]]
+
+ [[ 0.5+0.j -0.5-0.j]
+  [-0.5+0.j  0.5+0.j]]]
