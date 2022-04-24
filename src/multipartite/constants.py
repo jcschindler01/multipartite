@@ -25,12 +25,7 @@ psid['-'] = psid['-x']
 for key in psid.keys():
   psid[key] = psid[key]/np.sqrt( np.conjugate(np.transpose(psid[key]))@psid[key] )
 
-## density matrices
-rhod = dict()
+## projection matrices
+projd = dict()
 for key in psid.keys():
-  rhod[key] = np.outer(psid[key], np.conjugate(psid[key]))
-
-for key in rhod.keys():
-  print(key)
-  print(np.round(rhod[key],3))
-
+  projd[key] = np.outer(psid[key], np.conjugate(psid[key]))

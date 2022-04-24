@@ -1,0 +1,40 @@
+
+import numpy as np
+
+dag = lambda x: np.conjugate(np.transpose(x))
+
+def isPOSITIVE(M):
+  vals, vecs = np.linalg.eigh(M)
+  if np.all(vals >= 0.):
+    return True
+  else:
+    return False
+
+def isHERMITIAN(M, tol=1e-15):
+  z = M - dag(M)
+  if np.trace(dag(z)@z) < tol:
+    return True
+  else:
+    return False
+
+def isDENSITY(M, tol=1e-15):
+  if not isHERMITIAN(M, tol=tol):
+    return False
+  elif not isPOSITIVE(M):
+    return False
+  elif not np.abs(np.trace(M)-1.) < tol:
+    return False
+  else:
+    return True
+
+def isPOVM(MM, tol=1e-15):
+  for M in MM:
+    if not isHERMITIAN(M, tol):
+      return False
+    if not isPOSITIVE(M):
+      return False
+    z = np.sum(MM, axis=0)-np.eye(len(MM[0]))
+    if not np.trace(dag(z)@z) < tol:
+      return False
+    else:
+      return True
