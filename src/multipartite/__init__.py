@@ -12,3 +12,4 @@ plt.style.use("classic")
 from multipartite import mptools
 from multipartite import blochvec
 from multipartite.mptools import *
+from multipartite.blochvec import *
