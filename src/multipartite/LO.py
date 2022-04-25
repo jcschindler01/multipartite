@@ -130,7 +130,7 @@ def S_OBS_LO(rho=0.5*np.eye(2), A=[np.eye(2)], B=[np.eye(2)], RDE_out=True):
   out['S_AB_RHO'] = np.sum(Vxy*H(pxy/Vxy))
   out['S_A_RHOA'] = np.sum(Vx *H(px /Vx ))
   out['S_B_RHOB'] = np.sum(Vy *H(py /Vy ))
-  out['I_cl']     = np.sum(-pxpy*H(pxy/pxpy))
+  out['I_cl']     = np.sum(-pxpy[pxy!=0]*H(pxy[pxy!=0]/pxpy[pxy!=0]))
   ## bloch vectors
   out['r'] = 1.*r
   out['rA'] = 1.*rA

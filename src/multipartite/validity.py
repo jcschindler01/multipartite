@@ -3,12 +3,15 @@ import numpy as np
 
 dag = lambda x: np.conjugate(np.transpose(x))
 
-def isPOSITIVE(M):
+def isPOSITIVE(M, tol=1e-15):
   vals, vecs = np.linalg.eigh(M)
-  if np.all(vals >= 0.):
-    return True
-  else:
+  if not np.all(vals > -tol):
+    print("M is not POSITIVE")
+    print(M)
+    print("REPEAT: M is not POSITIVE")
     return False
+  else:
+    return True
 
 def isHERMITIAN(M, tol=1e-15):
   z = M - dag(M)
