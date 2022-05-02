@@ -24,3 +24,20 @@ def eig(A):
 
 def couter(psi):
   return 1.*np.outer(psi, np.conjugate(psi))
+
+
+
+def H(x):
+  """ H(x) = - x log x """
+  HH = np.zeros_like(x)
+  HH[x >0.] = -x[x>0.]*np.log2(x[x>0.])
+  HH[x==0.] = 0.
+  HH[x <0.] = np.nan
+  return 1.*HH
+
+def SVN(rho, decimals=12):
+  vals, vecs = eig(rho)
+  vals = np.round(vals, decimals) ## avoid tiny negative results
+  return np.sum(H(vals))
+
+
