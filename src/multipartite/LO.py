@@ -33,7 +33,7 @@ def S_OBS_RDE(rho):
   return S_OBS_LO(rho, A, B, RDE_out=False).copy()
 
 
-def S_OBS_LO(rho=0.5*np.eye(2), A=[np.eye(2)], B=[np.eye(2)], RDE_out=True):
+def S_OBS_LO(rho=0.5*np.eye(2), A=[np.eye(2)], B=[np.eye(2)], RDE_out=True, decimals=15):
   """
   Observational entropy of local POVM measurement.
   Recieves a density and two local POVMs.
@@ -61,12 +61,18 @@ def S_OBS_LO(rho=0.5*np.eye(2), A=[np.eye(2)], B=[np.eye(2)], RDE_out=True):
     for y in range(len(B)):
       pxy[x,y]=dot(rho, kprod(A[x],B[y]))
       Vxy[x,y]=np.trace(kprod(A[x],B[y]))
+  ## round to avoid tiny negative probabilities
+  pxy = np.round(pxy, decimals)
+  Vxy = np.round(Vxy, decimals)
   ## ensure real and discard imaginary parts
   if not (np.all(np.abs(pxy.imag)<1e-15) and np.all(np.abs(Vxy.imag)<1e-15)):
     return None
   else:
     pxy = 1.*pxy.real
     Vxy = 1.*Vxy.real
+  ## ensure positive
+  if not (np.all(pxy>=0.) and np.all(Vxy>=0.)):
+    return None
   ## calculate marginal probabilities and volumes
   for x in range(len(px)):
     px[x] = np.sum(pxy[x,:])
