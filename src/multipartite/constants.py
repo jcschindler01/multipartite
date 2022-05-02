@@ -29,3 +29,8 @@ for key in psid.keys():
 projd = dict()
 for key in psid.keys():
   projd[key] = np.outer(psid[key], np.conjugate(psid[key]))
+
+
+## new better names
+yy = psid
+pp = projd
