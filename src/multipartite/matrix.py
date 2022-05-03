@@ -28,7 +28,7 @@ def couter(psi):
 
 
 def H(x):
-  """ H(x) = - x log x """
+  """ H(x) = - x log2 x """
   HH = np.zeros_like(x)
   HH[x >0.] = -x[x>0.]*np.log2(x[x>0.])
   HH[x==0.] = 0.

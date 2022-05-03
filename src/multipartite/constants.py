@@ -31,6 +31,11 @@ for key in psid.keys():
   projd[key] = np.outer(psid[key], np.conjugate(psid[key]))
 
 
+def qq(x=0.,y=0.,z=0.):
+  """Qubit with Bloch vector x,y,z."""
+  return .5*((1.+0j)*np.eye(2)+(1.+0j)*x*X+(1.+0j)*y*Y+(1.+0j)*z*Z)
+
+
 ## new better names
 yy = psid
 pp = projd

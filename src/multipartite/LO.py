@@ -7,12 +7,15 @@ from multipartite.validity import *
 def isVALID(rho,A,B):
   if not isDENSITY(rho):
     print("RHO is not DENSITY")
+    print(rho)
     return False
   elif not isPOVM(A):
     print("A is not POVM")
+    print(A)
     return False
   elif not isPOVM(B):
     print("B is not POVM")
+    print(B)
     return False
   else:
     return True
@@ -72,6 +75,8 @@ def S_OBS_LO(rho=0.5*np.eye(2), A=[np.eye(2)], B=[np.eye(2)], RDE_out=True, deci
     Vxy = 1.*Vxy.real
   ## ensure positive
   if not (np.all(pxy>=0.) and np.all(Vxy>=0.)):
+    print(pxy)
+    print(Vxy)
     return None
   ## calculate marginal probabilities and volumes
   for x in range(len(px)):

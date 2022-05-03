@@ -18,11 +18,11 @@ aa, bb = float(aa), float(bb)
 
 rho = (1./(aa+bb)) * (aa*kprod(projd['0'],projd['0']) + bb*kprod(projd['1'],projd['+']))
 
-n = 100
+n = 101
 
 #P_RDE = [couter(np.array([2,1]))/5.,couter(np.array([-1,2]))/5.]
 
-B2 = [projd['+'],projd['-']]
+B2 = [pp['+'],pp['-']]
 
 #############################################################
 
@@ -250,4 +250,3 @@ if True:
 
 ## save
 plt.savefig('002.png', dpi=300)
-
