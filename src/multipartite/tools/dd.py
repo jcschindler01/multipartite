@@ -128,17 +128,82 @@ class matrix:
 
 
 
-M = np.random.random((2,2)) + 1j*np.random.random((2,2))
+class POVM:
 
-M = M + dag(M)
+  """A collection of valid POVM elements summing to identity."""
 
-M = 0.5*np.eye(2) + .25*const.X
+  def __init__(self, e=(matrix(),), tol=1e-15):
+    ## attributes
+    self.e = e         ## elements (tuple of matrix objects)
+    self.tol = 1.*tol
+    ## update
+    self.update()
 
-m = matrix(M)
+  ## update from current self.e
+  def update(self):
+    self.d = self.e[0].d    ## dimension
+    self.n = len(self.e)    ## number of outcomes
+    self.sum = np.sum([self.e[k].M for k in range(self.n)], axis=0)  ## sum of elements
 
-c = np.array([2,0,0,0])
+  ## set self.e
+  def setE(self,e=(matrix(),)):
+    self.e = e
+    self.update()
 
-m.setBloch2(c)
+  def isNormed(self):
+    eps = np.abs(self.sum-np.eye(self.d))
+    if np.all(eps < self.tol):
+      return True
+    return False
 
-m.report()
+  def isPOVMe(self):
+    if all(self.e[k].isPOVMe() for k in range(self.n)):
+      return True
+    return False
+
+  def isPOVM(self):
+    if self.isPOVMe() and self.isNormed():
+      return True
+    return False
+
+  def report(self):
+    print("POVM.report")
+    print()
+    for key in ['d','n']:
+      print("%s = %s"%(key,vars(self)[key]))
+      print()
+    for key in ['sum']:
+      print("%s = "%(key))
+      print(vars(self)[key])
+      print()
+    for k in range(len(self.e)):
+      print("Element %s: \n"%k)
+      if self.d==2:
+        print("bloch2 = %s \n"%self.e[k].bloch2)
+      print(self.e[k].M)
+      print()
+      print()
+    print("isPOVMe     = %s"%self.isPOVMe())
+    print("isNormed    = %s"%self.isNormed())
+    print()
+    print("isPOVM      = %s"%self.isPOVM())
+    print()
+
+
+
+a,b,c,d,e = matrix(), matrix(), matrix(), matrix(), matrix()
+
+a.setBloch2((1,1,0,0))
+b.setBloch2((1,-1,0,0))
+
+
+c.setBloch2((.66,.66,0,0))
+d.setBloch2((.67,-.33,0, .4))
+e.setBloch2((.67,-.33,0,-.4))
+
+p = POVM((e,c,d))
+
+p.report()
+
+
 
