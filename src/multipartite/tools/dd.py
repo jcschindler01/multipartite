@@ -172,22 +172,29 @@ class POVM:
     for key in ['d','n']:
       print("%s = %s"%(key,vars(self)[key]))
       print()
-    for key in ['sum']:
-      print("%s = "%(key))
-      print(vars(self)[key])
-      print()
     for k in range(len(self.e)):
       print("Element %s: \n"%k)
       if self.d==2:
         print("bloch2 = %s \n"%self.e[k].bloch2)
       print(self.e[k].M)
       print()
-      print()
+    print()
+    print("Sum: \n")
+    print(self.sum)
+    print()
+    print()
     print("isPOVMe     = %s"%self.isPOVMe())
     print("isNormed    = %s"%self.isNormed())
     print()
     print("isPOVM      = %s"%self.isPOVM())
     print()
+
+
+
+
+
+
+
 
 
 
