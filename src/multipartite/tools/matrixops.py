@@ -17,7 +17,7 @@ def kprod(A,B):
 def ksum(A,B):
   return np.kron(A,one) + np.kron(one,B)
 
-def eigh(A):
+def eig(A):
   vals, vecs = np.linalg.eigh(A)
   vecs = np.transpose(vecs) ## so vecs[0] is an eigenvector
   return 1.*vals, 1.*vecs
