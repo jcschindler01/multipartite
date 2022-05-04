@@ -191,13 +191,6 @@ class POVM:
 
 
 
-
-
-
-
-
-
-
 a,b,c,d,e = matrix(), matrix(), matrix(), matrix(), matrix()
 
 a.setBloch2((1,1,0,0))
@@ -205,8 +198,8 @@ b.setBloch2((1,-1,0,0))
 
 
 c.setBloch2((.66,.66,0,0))
-d.setBloch2((.67,-.33,0, .4))
-e.setBloch2((.67,-.33,0,-.4))
+d.setBloch2((.67,-.33,0, .33))
+e.setBloch2((.67,-.33,0,-.33))
 
 p = POVM((e,c,d))
 
